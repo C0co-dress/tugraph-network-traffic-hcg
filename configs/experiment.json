@@ -1,0 +1,11 @@
+{
+  "scan_rows": 600000,
+  "top_classes": 10,
+  "samples_per_class": 5000,
+  "embedding_dim": 16,
+  "test_size": 0.2,
+  "random_state": 42,
+  "epochs": 50,
+  "batch_size": 512,
+  "causal_window_seconds": 60
+}

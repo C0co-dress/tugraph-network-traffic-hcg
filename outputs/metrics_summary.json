@@ -1,0 +1,26 @@
+{
+  "DecisionTree": {
+    "accuracy": 0.7235,
+    "precision_weighted": 0.7265627670719782,
+    "recall_weighted": 0.7235,
+    "f1_weighted": 0.7239179204995063
+  },
+  "KNN": {
+    "accuracy": 0.6142,
+    "precision_weighted": 0.6103123669201136,
+    "recall_weighted": 0.6142,
+    "f1_weighted": 0.6111129375819578
+  },
+  "RandomForest": {
+    "accuracy": 0.7879,
+    "precision_weighted": 0.791590428859035,
+    "recall_weighted": 0.7879,
+    "f1_weighted": 0.7874799035093656
+  },
+  "MLP_Torch": {
+    "accuracy": 0.6995,
+    "precision_weighted": 0.6998316502264302,
+    "recall_weighted": 0.6995,
+    "f1_weighted": 0.6972891374153545
+  }
+}

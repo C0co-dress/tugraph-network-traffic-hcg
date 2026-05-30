@@ -1,0 +1,9 @@
+pandas
+numpy
+scikit-learn
+torch
+tensorboard
+matplotlib
+python-pptx
+tqdm
+joblib

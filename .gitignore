@@ -1,0 +1,34 @@
+# Large data files (use Git LFS or upload separately)
+Dataset-Unicauca-Version2-87Atts.csv/
+*.csv.gz
+
+# Large output/model files (>100MB for GitHub)
+outputs/DecisionTree.joblib
+outputs/KNN.joblib
+outputs/RandomForest.joblib
+outputs/fused_features_sample.csv
+outputs/mlp_model.pt
+
+# Python cache
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# TensorBoard runs (large event files)
+runs/
+
+# Old versions
+outputs_old/
+runs_old/
+reports_old/
+tugraph_import/
+
+# IDE
+.vscode/
+.idea/
+.docker-codex/
+
+# OS
+.DS_Store
+Thumbs.db

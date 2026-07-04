@@ -16,13 +16,20 @@ __pycache__/
 venv/
 
 # TensorBoard runs (large event files)
-runs/
+runs/*
+!runs/network_traffic_mlp/
+!runs/network_traffic_mlp/*
 
 # Old versions
 outputs_old/
 runs_old/
 reports_old/
-tugraph_import/
+tugraph_import/*
+!tugraph_import/hcg_vertices_endpoint.csv
+!tugraph_import/hcg_edges_communicates.csv
+!tugraph_import/import.json
+!tugraph_import/sanity_checks.cypher
+!tugraph_import/tugraph_schema_reference.json
 
 # IDE
 .vscode/

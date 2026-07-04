@@ -45,3 +45,20 @@ TuGraph 文件在 `tugraph_import/`。如果 Docker 可用，可尝试：
 ```powershell
 .\scripts\run_tugraph_docker.ps1
 ```
+
+## HCG 作业三本地复现
+
+HCG 图网络流量分类报告和复现入口已经本地化，便于推送到个人 Git 仓库后提交。
+
+关键文件：
+
+- `scripts/run_hcg_local.py`：HCG-only 复现入口，构建 A/B/C 特征并训练 3 个分类器。
+- `docs/hcg_local_reproduction.md`：本地复现说明。
+- `reports/安全通论实验3-HCG图网络流量分类实验报告.md`：Markdown 报告。
+- `reports/林源卿2023312350安全通论实验报告3-HCG图网络流量分类.docx`：Word 报告。
+
+运行 HCG-only 实验：
+
+```powershell
+python scripts\run_hcg_local.py --scan-rows 600000 --top-classes 10 --samples-per-class 5000
+```

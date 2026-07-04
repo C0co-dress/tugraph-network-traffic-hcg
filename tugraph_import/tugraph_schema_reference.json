@@ -1,0 +1,344 @@
+{
+  "reference": {
+    "description": "TuGraph import config for network traffic HCG and TCG graphs.",
+    "import_command": "lgraph_import -c /data/traffic_import/import.json -d /tmp/traffic_lgraph --overwrite 1",
+    "notes": [
+      "HCG: Endpoint vertices are {IP, port}; COMMUNICATES edges are original traffic flows.",
+      "TCG: Flow vertices are original flows. Four edge types per Liu Zhen paper:",
+      "  CR (Communication Relationship): bidirectional counterpart flows",
+      "  PR (Propagation Relationship): dstIp(f1) = srcIp(f2)",
+      "  DHR (Dynamic-port Host Relationship): same IP, different ports",
+      "  SHR (Static-port Host Relationship): same IP, same port",
+      "Node2Vec embeddings: p=0.3, q=0.7, walk_length=7 per Su Yongcai paper."
+    ]
+  },
+  "schema": [
+    {
+      "label": "Endpoint",
+      "type": "VERTEX",
+      "primary": "endpoint_id",
+      "properties": [
+        {
+          "name": "endpoint_id",
+          "type": "STRING"
+        },
+        {
+          "name": "ip",
+          "type": "STRING"
+        },
+        {
+          "name": "port",
+          "type": "INT32"
+        }
+      ]
+    },
+    {
+      "label": "Flow",
+      "type": "VERTEX",
+      "primary": "flow_id",
+      "properties": [
+        {
+          "name": "flow_id",
+          "type": "STRING"
+        },
+        {
+          "name": "src_endpoint",
+          "type": "STRING"
+        },
+        {
+          "name": "dst_endpoint",
+          "type": "STRING"
+        },
+        {
+          "name": "protocol_name",
+          "type": "STRING"
+        },
+        {
+          "name": "l7_protocol",
+          "type": "INT32"
+        },
+        {
+          "name": "flow_duration",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "total_packets",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "total_bytes",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "timestamp",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "label": "COMMUNICATES",
+      "type": "EDGE",
+      "constraints": [
+        [
+          "Endpoint",
+          "Endpoint"
+        ]
+      ],
+      "properties": [
+        {
+          "name": "flow_id",
+          "type": "STRING"
+        },
+        {
+          "name": "protocol",
+          "type": "INT32"
+        },
+        {
+          "name": "protocol_name",
+          "type": "STRING"
+        },
+        {
+          "name": "l7_protocol",
+          "type": "INT32"
+        },
+        {
+          "name": "flow_duration",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "total_packets",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "total_bytes",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "timestamp",
+          "type": "STRING"
+        }
+      ]
+    },
+    {
+      "label": "CAUSAL_CR",
+      "type": "EDGE",
+      "constraints": [
+        [
+          "Flow",
+          "Flow"
+        ]
+      ],
+      "properties": [
+        {
+          "name": "src_ip",
+          "type": "STRING"
+        },
+        {
+          "name": "src_port",
+          "type": "INT32"
+        },
+        {
+          "name": "dst_ip",
+          "type": "STRING"
+        },
+        {
+          "name": "dst_port",
+          "type": "INT32"
+        },
+        {
+          "name": "protocol",
+          "type": "INT32"
+        },
+        {
+          "name": "delta_seconds",
+          "type": "DOUBLE"
+        }
+      ]
+    },
+    {
+      "label": "CAUSAL_PR",
+      "type": "EDGE",
+      "constraints": [
+        [
+          "Flow",
+          "Flow"
+        ]
+      ],
+      "properties": [
+        {
+          "name": "shared_ip",
+          "type": "STRING"
+        },
+        {
+          "name": "delta_seconds",
+          "type": "DOUBLE"
+        }
+      ]
+    },
+    {
+      "label": "CAUSAL_DHR",
+      "type": "EDGE",
+      "constraints": [
+        [
+          "Flow",
+          "Flow"
+        ]
+      ],
+      "properties": [
+        {
+          "name": "shared_ip",
+          "type": "STRING"
+        },
+        {
+          "name": "src_port_f1",
+          "type": "INT32"
+        },
+        {
+          "name": "src_port_f2",
+          "type": "INT32"
+        },
+        {
+          "name": "delta_seconds",
+          "type": "DOUBLE"
+        }
+      ]
+    },
+    {
+      "label": "CAUSAL_SHR",
+      "type": "EDGE",
+      "constraints": [
+        [
+          "Flow",
+          "Flow"
+        ]
+      ],
+      "properties": [
+        {
+          "name": "shared_ip",
+          "type": "STRING"
+        },
+        {
+          "name": "shared_port",
+          "type": "INT32"
+        },
+        {
+          "name": "delta_seconds",
+          "type": "DOUBLE"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "/data/traffic_import/hcg_vertices_endpoint.csv",
+      "format": "CSV",
+      "label": "Endpoint",
+      "header": 1,
+      "columns": [
+        "endpoint_id",
+        "ip",
+        "port"
+      ]
+    },
+    {
+      "path": "/data/traffic_import/hcg_edges_communicates.csv",
+      "format": "CSV",
+      "label": "COMMUNICATES",
+      "header": 1,
+      "SRC_ID": "Endpoint",
+      "DST_ID": "Endpoint",
+      "columns": [
+        "SRC_ID",
+        "DST_ID",
+        "flow_id",
+        "protocol",
+        "protocol_name",
+        "l7_protocol",
+        "flow_duration",
+        "total_packets",
+        "total_bytes",
+        "timestamp"
+      ]
+    },
+    {
+      "path": "/data/traffic_import/tcg_vertices_flow.csv",
+      "format": "CSV",
+      "label": "Flow",
+      "header": 1,
+      "columns": [
+        "flow_id",
+        "src_endpoint",
+        "dst_endpoint",
+        "protocol_name",
+        "l7_protocol",
+        "flow_duration",
+        "total_packets",
+        "total_bytes",
+        "timestamp"
+      ]
+    },
+    {
+      "path": "/data/traffic_import/tcg_edges_CR.csv",
+      "format": "CSV",
+      "label": "CAUSAL_CR",
+      "header": 1,
+      "SRC_ID": "Flow",
+      "DST_ID": "Flow",
+      "columns": [
+        "SRC_ID",
+        "DST_ID",
+        "src_ip",
+        "src_port",
+        "dst_ip",
+        "dst_port",
+        "protocol",
+        "delta_seconds"
+      ]
+    },
+    {
+      "path": "/data/traffic_import/tcg_edges_PR.csv",
+      "format": "CSV",
+      "label": "CAUSAL_PR",
+      "header": 1,
+      "SRC_ID": "Flow",
+      "DST_ID": "Flow",
+      "columns": [
+        "SRC_ID",
+        "DST_ID",
+        "shared_ip",
+        "delta_seconds"
+      ]
+    },
+    {
+      "path": "/data/traffic_import/tcg_edges_DHR.csv",
+      "format": "CSV",
+      "label": "CAUSAL_DHR",
+      "header": 1,
+      "SRC_ID": "Flow",
+      "DST_ID": "Flow",
+      "columns": [
+        "SRC_ID",
+        "DST_ID",
+        "shared_ip",
+        "src_port_f1",
+        "src_port_f2",
+        "delta_seconds"
+      ]
+    },
+    {
+      "path": "/data/traffic_import/tcg_edges_SHR.csv",
+      "format": "CSV",
+      "label": "CAUSAL_SHR",
+      "header": 1,
+      "SRC_ID": "Flow",
+      "DST_ID": "Flow",
+      "columns": [
+        "SRC_ID",
+        "DST_ID",
+        "shared_ip",
+        "shared_port",
+        "delta_seconds"
+      ]
+    }
+  ]
+}

@@ -39,3 +39,13 @@ tugraph_import/*
 # OS
 .DS_Store
 Thumbs.db
+
+# Reports and docs
+reports/
+docs/
+
+# Binary models
+*.joblib
+
+# Non-HCG scripts
+scripts/run_hcg_local.py

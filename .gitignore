@@ -87,3 +87,6 @@ docs/
 # Generated report figures (already embedded in DOCX)
 outputs/*/report_fig_*.png
 scripts/render_tcg_report_figures.py
+
+# Reports - submitted separately after formatting
+reports/
